@@ -1,0 +1,116 @@
+----lanchonete
+
+create table cliente(
+id_cliente int not null primary key,
+nome varchar(50),
+cpf char(11) ,
+endereco varchar(20),
+constraint unique_cpf unique(cpf) 
+ );
+ 
+ 
+ create table pedido(
+ id_pedido int PRIMARY key,
+   id_pedido_produto,
+   id_pedido_funcionario,
+   id_pedido_vendas
+ 
+ )
+ 
+ 
+ 
+ 
+ create table produto(
+id_produto int not null primary key,
+nome varchar(50),
+detalhes_produto varchar(50),
+id_produto_pedido,
+id_produto_forcecedor int,
+
+constraint fk_produto_pedido foreign key( id_produto_pedido) references pedido (id_pedido_produto)
+);
+
+create table fornecedor(
+  id_fornecedro int primary key,
+  id_fornecedor_produto int,
+    name varchar(30),
+    CNPJ char(15) not null,
+    contact char(11) default 0,
+    constraint unique_CNPJ_fornecedor unique (CNPJ),
+  constraint fk_forncedor_produto foreign key( id_fornecedor_produto  ) references produto (id_produto_forcecedor)
+  )
+  create table funcionario(
+  id_funcionario int primary key,
+    nome varchar,
+    id_funcionario_vendas int,
+    id_funcionario_pedido int,
+    constraint fk_funcionario_pedido foreign key(   id_funcionario_pedido ) references pedido (id_pedido_funcionario)
+  )
+  
+  
+  
+  create table vendas(
+  id_vendas int PRIMARY key,
+    id_vendas_pedido int,
+    id_vendas_funcionario int,
+    
+   CONSTRAINT fk_vendas_pedido FOREIGN key( id_vendas_pedido) REFERENCES pedido( id_pedido_vendas),
+   CONSTRAINT fk_vendas_funcionario FOREIGN key( id_vendas_funcionario) REFERENCES funcionario(id_funcionario_vendas)
+  )
+ 
+  -- INSERTS
+  
+  INSERT INTO cliente(id_cliente,nome,cpf,endereco) values(1,"felipe","123456789","rua tertuliano")
+  INSERT INTO cliente(id_cliente,nome,cpf,endereco) values(2,"Isasmin","55555555","rodovia b")
+  INSERT INTO cliente(id_cliente,nome,cpf,endereco) values(3,"Joao","44444","sc 410")
+  SELECT*from cliente
+  
+  INSERT INTO pedido(id_pedido,id_pedido_produto,id_pedido_funcionario,id_pedido_vendas) values(1,1,1,1)
+  INSERT INTO pedido(id_pedido,id_pedido_produto,id_pedido_funcionario,id_pedido_vendas) values(2,2,2,2)
+  INSERT INTO pedido(id_pedido,id_pedido_produto,id_pedido_funcionario,id_pedido_vendas) values(3,1,1,3)
+  SELECT*from pedido
+  
+  INSERT into produto(id_produto,name,detalhes_produto,id_produto_pedido,id_produto_forcecedor)VALUES(1,"Cachooro quente","completo",1,1)
+  INSERT into produto(id_produto,name,detalhes_produto,id_produto_pedido,id_produto_forcecedor)VALUES(2,"X- Salada","sem cebola",2,1)
+  INSERT into produto(id_produto,name,detalhes_produto,id_produto_pedido,id_produto_forcecedor)VALUES(3,"Cachorro quente","sem milho",1,1)
+  SELECT *from produto
+  
+    INSERT into funcionario( id_funcionario,nome,id_funcionario_vendas,id_funcionario_pedido)values(1,"Jair",1,1)
+    INSERT into funcionario( id_funcionario,nome,id_funcionario_vendas,id_funcionario_pedido)values(2,"Paulo",2,2)
+    SELECT*from funcionario
+    
+     INSERT into vendas(id_vendas, id_vendas_pedido, id_vendas_funcionario )VALUES(1,1,1)
+     INSERT into vendas(id_vendas, id_vendas_pedido, id_vendas_funcionario )VALUES(2,2,2)
+     INSERT into vendas(id_vendas, id_vendas_pedido, id_vendas_funcionario )VALUES(3,1,3)
+     SELECT*from vendas
+     
+     insert into fornecedor(id_fornecedro,id_fornecedor_produto,name,cnpj,contact) VALUES (1,1,"Padaria BH","1212121","48454545")
+     SELECT*FROM fornecedor
+
+  
+  --SELECT
+  
+  -- Quantos clientes foram pra lanchonete?
+  SELECT COUNT(id_cliente) as "Total de clientes",nome from cliente
+  GROUP by id_cliente
+  ORDER by nome DESC
+  --
+  
+  --qual produto tem fornecedor?
+  SELECT * from produto p
+  INNER join fornecedor f ON p.id_produto_forcecedor = f.id_fornecedor_produto
+  WHERE P.id_produto >0
+  GROUP by p.id_produto
+  
+  
+  -- qual a média das vendas dos funcionario Jair?
+ 
+  SELECT avg(v.id_vendas_funcionario)as "media funcionario" ,f.nome from funcionario f
+  inner join vendas v ON v.id_vendas_funcionario = f.id_funcionario_vendas
+  GROUP BY id_funcionario
+  HAVING f.nome = "Jair "
+  
+   
+
+  
+  
